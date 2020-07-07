@@ -1,0 +1,6 @@
+C:\Users\Fer\Desktop\PROGRAMACION\Programacion 2 proyectos\Luque.Fernando.2doD\Entidades\bin\Debug\Entidades.dll
+C:\Users\Fer\Desktop\PROGRAMACION\Programacion 2 proyectos\Luque.Fernando.2doD\Entidades\bin\Debug\Entidades.pdb
+C:\Users\Fer\Desktop\PROGRAMACION\Programacion 2 proyectos\Luque.Fernando.2doD\Entidades\obj\Debug\Entidades.csprojAssemblyReference.cache
+C:\Users\Fer\Desktop\PROGRAMACION\Programacion 2 proyectos\Luque.Fernando.2doD\Entidades\obj\Debug\Entidades.csproj.CoreCompileInputs.cache
+C:\Users\Fer\Desktop\PROGRAMACION\Programacion 2 proyectos\Luque.Fernando.2doD\Entidades\obj\Debug\Entidades.dll
+C:\Users\Fer\Desktop\PROGRAMACION\Programacion 2 proyectos\Luque.Fernando.2doD\Entidades\obj\Debug\Entidades.pdb
