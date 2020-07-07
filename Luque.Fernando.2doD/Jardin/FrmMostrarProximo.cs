@@ -16,39 +16,20 @@ namespace Jardin
     public partial class FrmMostrarProximo : Form
     {
         
-
         Queue<Alumno> listaAlumnos;
         List<Docente> listaDocentes;
-
-        
-
+       
         FrmEvaluando eva;
 
         Thread hiloProximo;
 
-        public delegate void DetenerHilosPrincipal();
-        public delegate void CerrarForm();
-        //public delegate void MostrarAlumno();
+        public delegate void DetenerHilosPrincipal();       
         public delegate void SinAlumnos();
 
-       // public delegate void PasarAlumno();
-
-        //public delegate void DetenerFormularios();
+      
         public event DetenerHilosPrincipal MatarHiloTiempo;
-
         public event SinAlumnos NoHayAlumnos;
-
-        //public event CerrarForm Cerrar;
-
-
-
-
-        //public event PasarAlumno PasarAEvaluar;
-
-        //public event MostrarAlumno AlumnoAMostrar;
-
-        //public event DetenerFormularios MatarHilo;
-        //public delegate void DetenerFormularios();
+       
 
         public Queue<Alumno> Alumnos
         {
@@ -68,10 +49,8 @@ namespace Jardin
             set { this.listaDocentes = value; }
         }
 
-
+       
         
-
-        //event MostrarProximo SiguienteAlumno; 
         public FrmMostrarProximo()
         {
             InitializeComponent();
@@ -97,13 +76,9 @@ namespace Jardin
             try
             {
                 while (this.listaAlumnos.Count > 0)
-                {
-
-                    
+                {                   
                     bool listo = false;
-
-                    
-                    Alumno next = new Alumno();
+               
                     Random rnd = new Random();
                     int indexDocente = rnd.Next(0, 9);
                     int indexAlumno = rnd.Next(0, listaAlumnos.Count);
@@ -120,8 +95,7 @@ namespace Jardin
                     {
                         eva.Alumno = listaAlumnos.Dequeue();
                     }
-
-                    
+                 
                     eva.Docente = listaDocentes[indexDocente];
 
                     if (listaAlumnos.Count > 0 && listo == false)
@@ -129,9 +103,7 @@ namespace Jardin
                         MostrarAlumnoProximo(listaAlumnos.Peek());
                         
                         eva.EvaluarAlumno();
-
-
-                        //colaAlumnos.Dequeue(),listaDocentes[index]);
+                      
 
                     }
 
@@ -148,7 +120,7 @@ namespace Jardin
         }
         
 
-        public void MostrarAlumnoProximo(Alumno a)//, Docente d)
+        public void MostrarAlumnoProximo(Alumno a)
         {
             if (rtb_ProximoAEvaluar.InvokeRequired)
             {
@@ -164,16 +136,14 @@ namespace Jardin
 
            
         }
-
        
-
         public void MensajeNoHayAlumnos()
         {
             MessageBox.Show("Ya no quedan alumnos para evaluar");
+
             if (hiloProximo.IsAlive)
                 hiloProximo.Abort();
             
-
         }
 
         public void DetenerHilo()

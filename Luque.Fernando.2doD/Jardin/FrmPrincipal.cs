@@ -15,37 +15,21 @@ namespace Jardin
 {
     public partial class FrmPrincipal : Form
     {
-        FrmMostrarProximo frmMostrar;
-        //FrmEvaluando frmEvalua;
 
-        //Queue<Alumno> listaAlumnos;
-
-        Queue<Alumno> listaAlumnos;
-        List<Docente> listaDocentes;
         int contador = 0;
 
-        //Thread hiloTiempo;
-        //Thread hiloEvaluacion;
+        FrmMostrarProximo frmMostrar;
+        
+        Queue<Alumno> colaAlumnos;
+        List<Docente> listaDocentes;
+               
         Thread hiloEstadoJardin;
-
-        //Thread hiloProximo;
-
-        //public delegate void Evaluar(Alumno a, Docente d);
-        //public delegate void SinAlumnos();
+        
         public delegate void CambiarEstadoJardin();
-        //public delegate void PasarAlumno(Alumno a, Docente d);
-
-        //public delegate void DetenerConteo();
-
-        //public event DetenerConteo PararTiempo;
-
+        
         public event CambiarEstadoJardin EventoEstado;
 
-        //public event PasarAlumno alumnoPasado;
-
-        //public event Evaluar evaluarAlumno;
-
-        //public event SinAlumnos NoQuedanAlumnos;
+       
 
 
         #region Propiedades
@@ -53,11 +37,11 @@ namespace Jardin
         {
             get 
             {
-                return this.listaAlumnos;
+                return this.colaAlumnos;
             }
             set 
             { 
-                this.listaAlumnos = value; 
+                this.colaAlumnos = value; 
             }
         }
         public List<Docente> Docentes
@@ -77,35 +61,13 @@ namespace Jardin
         {
             InitializeComponent();
             this.cargarEntidades();
-            //hiloTiempo = new Thread(new ParameterizedThreadStart(MostrarTiempo));
+            
             EventoEstado += Recreo;
 
             
         }
 
-        private void cargarEntidades()
-        {
-            this.listaAlumnos = FuncionalidadSql.CargarAlumnos();
-            this.listaDocentes = FuncionalidadXML.DeserlizarDocentes();
-
-            foreach (Alumno item in listaAlumnos)
-            {
-               
-                rtb_Alumnos.AppendText(item.ToString()+"\n");
-            }
-
-            foreach (Docente item in listaDocentes)
-            {
-
-                rtb_Docentes.AppendText(item.ToString()+"\n");
-                
-            }
-
-            foreach (Docente item in listaDocentes)
-            {
-                FuncionalidadSql.InsertarDocente(item);
-            }
-        }
+        
 
         private void btn_IniciarJornada_Click(object sender, EventArgs e)
         {
@@ -119,10 +81,10 @@ namespace Jardin
 
                 
                 frmMostrar = new FrmMostrarProximo();
-                frmMostrar.Alumnos = this.listaAlumnos;
-                frmMostrar.Docentes = this.listaDocentes;
 
-                // frmMostrar.MatarHiloTiempo += DetenerHilos;
+                frmMostrar.Alumnos = this.colaAlumnos;
+                frmMostrar.Docentes = this.listaDocentes;
+               
                 frmMostrar.MatarHiloTiempo += DetenerHilos;
 
                 frmMostrar.Show();
@@ -142,6 +104,30 @@ namespace Jardin
 
         }
 
+        private void cargarEntidades()
+        {
+            this.colaAlumnos = FuncionalidadSql.CargarAlumnos();
+            this.listaDocentes = FuncionalidadXML.DeserlizarDocentes();
+
+            foreach (Alumno item in colaAlumnos)
+            {
+
+                rtb_Alumnos.AppendText(item.ToString() + "\n");
+            }
+
+            foreach (Docente item in listaDocentes)
+            {
+
+                rtb_Docentes.AppendText(item.ToString() + "\n");
+
+            }
+
+            foreach (Docente item in listaDocentes)
+            {
+                FuncionalidadSql.InsertarDocente(item);
+            }
+        }
+
         public void DetenerHilos()
         {
             if (hiloEstadoJardin.IsAlive)
@@ -150,49 +136,9 @@ namespace Jardin
             if (timer_Evaluando.Enabled==true)
                     timer_Evaluando.Stop();
         }
-             
-       
+                   
 
-        public void MostrarTiempo(object utcObj)
-        {
-            int utc=-3;
-            Label lblTiempo = (Label)utcObj;
-
-            while (true)
-            {
-                if (this.lbl_Tiempo.InvokeRequired)
-                {
-                    this.lbl_Tiempo.BeginInvoke((MethodInvoker)delegate ()
-                    {
-                        this.lbl_Tiempo.Text = DateTime.UtcNow.AddHours(utc).ToString("hh:mm:ss");
-                    });
-                }
-                else
-                {
-                    this.lbl_Tiempo.Text = DateTime.UtcNow.AddHours(utc).ToString("hh:mm:ss");
-                }
-
-                Thread.Sleep(1000);
-            }
-        }
-
-        private void JardinUtn_FormClosing(object sender, FormClosingEventArgs e)
-        {
-           // if (!(hiloTiempo is null) && hiloTiempo.IsAlive)
-             //   hiloTiempo.Abort();
-
-           // if (hiloEvaluacion.IsAlive)
-             //   hiloEvaluacion.Abort();
-
-            if (!(hiloEstadoJardin is null) && hiloEstadoJardin.IsAlive)
-                    hiloEstadoJardin.Abort();
-
-            if(!(frmMostrar is null))
-                frmMostrar.Close();
-
-          /*  if (hiloProximo.IsAlive)
-                hiloProximo.Abort();*/
-        }
+        
         public void Recreo()
         {
             CambiarLabel("Recreo");
@@ -225,14 +171,24 @@ namespace Jardin
             }
 
         }
-
-        
+       
 
         private void timer_Evaluando_Tick(object sender, EventArgs e)
         {
             contador++;
-            lbl_Tiempo.Text = "Segundo desde que se inicio a evaluar: " + contador.ToString(); 
+            lbl_Tiempo.Text = "Segundos desde que se inicio a evaluar: " + contador.ToString(); 
 
+        }
+
+        private void JardinUtn_FormClosing(object sender, FormClosingEventArgs e)
+        {
+
+
+            if (!(hiloEstadoJardin is null) && hiloEstadoJardin.IsAlive)
+                hiloEstadoJardin.Abort();
+
+            if (!(frmMostrar is null))
+                frmMostrar.Close();
 
 
         }

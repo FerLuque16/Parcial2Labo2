@@ -14,53 +14,19 @@ namespace Jardin
 {
     public partial class FrmEvaluando : Form
     {
-        Queue<Alumno> colaAlumnos;
+        
         Alumno alumno;
         Docente docente;
-        List<Docente> listaDocentes;
+       
 
         List<Aula> aulas;
 
         List<string> listaObservaciones;
-
-        public delegate void SinAlumnos();
+       
         public delegate void DetenerFormularios();
 
 
         public event DetenerFormularios MatarHilo;
-
-        //Thread hiloEvaluando;
-
-        // event FrmPrincipal.Evaluar EvaluarProximo;
-        //event SinAlumnos NoHayAlumnos;
-        public FrmEvaluando()
-        {
-            InitializeComponent();
-
-            aulas = FuncionalidadSql.CargarAulas();
-            listaObservaciones = CargarObservaciones();
-            //EvaluarProximo += ProximoAEvaluar;
-            //NoHayAlumnos += MensajeNoHayAlumnos;
-
-            //MatarHilo +=
-
-            //hiloEvaluando = new Thread(EvaluarAlumno);
-
-            //hiloEvaluando.Start();
-
-        }
-
-
-        public Queue<Alumno> Alumnos
-        {
-            get
-            { return this.colaAlumnos;
-            }
-            set
-            {
-                this.colaAlumnos = value;
-            }
-        }
 
         public Alumno Alumno
         {
@@ -86,19 +52,17 @@ namespace Jardin
             }
         }
 
-
-
-        public List<Docente> Docentes
+        public FrmEvaluando()
         {
-            get { return this.listaDocentes; }
-            set { this.listaDocentes = value; }
+            InitializeComponent();
+
+            aulas = FuncionalidadSql.CargarAulas();
+            listaObservaciones = CargarObservaciones();
+            
         }
 
-        
 
-        
-
-        public void EvaluarAlumno()//Alumno a, Docente d)
+        public void EvaluarAlumno()
         {
             
 
@@ -118,7 +82,6 @@ namespace Jardin
                 Evaluacion ev = new Evaluacion(this.alumno.Id, this.docente.Id, idAula, nota1, nota2, notaFinal, notaFinal.Observacion(listaObservaciones));// "Bien");
 
                 FuncionalidadXML.SerializarAlumno(this.alumno, notaFinal);
-
                 FuncionalidadSql.InsertarEvaluacion(ev);
 
                 Thread.Sleep(8000);
@@ -129,9 +92,7 @@ namespace Jardin
             {
 
                 FuncionalidadLog.GuardarLog(ex.Message);
-            }
-           
-
+            }           
         }
 
 
@@ -148,9 +109,7 @@ namespace Jardin
             {
                 this.rtb_AlumnosAlRecreo.AppendText(a.ToString());
             }
-        }
-     
-
+        }     
         public void ActualizarRTBAlumno(Alumno a)
         {
             if (this.rtb_AlumnoEvaluado.InvokeRequired)
